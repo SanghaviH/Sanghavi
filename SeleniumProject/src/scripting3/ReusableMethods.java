@@ -1,4 +1,4 @@
-package scripting3_propFile;
+package scripting3;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.util.*;
 
 public class ReusableMethods {
-        /************************************************************************
+        /************************
          * Method            : launchBrowser()
          * Purpose           : This method launches the required browsers viz., chrome, firefox and edge
          * Parameters        : String browserName
@@ -18,7 +18,7 @@ public class ReusableMethods {
          * Reviewed By      :
          * Reviewed Date    :
          * Modified by      :
-         *************************************************************************/
+         *************************/
         public static WebDriver launchBrowser(String browserName) {
             WebDriver oDriver = null;
             try {
@@ -49,15 +49,16 @@ public class ReusableMethods {
                 System.out.println("Exception in the 'launchBrowser()' method. " + e);
                 return null;
             }
+
         }
 
-        /************************************************************************
+        /************************
          * Method            : navigateURL()
          * Purpose           : This method loads the url
          * Parameters        : WebDriver oBrowser, String strURL
          * Return Type       : boolean
          * Author Name      : Test user
-         *************************************************************************/
+         *************************/
         public static boolean navigateURL(WebDriver oBrowser, String strURL) {
             try {
                 oBrowser.navigate().to("http://localhost/login.do");
@@ -75,13 +76,13 @@ public class ReusableMethods {
             }
         }
 
-        /************************************************************************
+        /************************
          * Method            : loginToApplication()
          * Purpose           : This method performs login action in actiTime application
          * Parameters        : WebDriver oBrowser, String userName, String password
          * Return Type       : boolean
          * Author Name      : Test user
-         *************************************************************************/
+         *************************/
         public static boolean loginToApplication(WebDriver oBrowser, String userName, String password) {
             try {
                 //Login to the application
@@ -107,13 +108,13 @@ public class ReusableMethods {
             }
         }
 
-        /************************************************************************
+        /************************
          * Method            : createUser()
          * Purpose           : This method creates new user in actiTime
          * Parameters        : WebDriver oBrowser
          * Return Type       : String
          * Author Name      : Test user
-         *************************************************************************/
+         *************************/
         public static String createUser(WebDriver oBrowser, Map<String, String> data){
             String userName = null;
             try{
@@ -148,17 +149,16 @@ public class ReusableMethods {
             }
         }
 
-
-        /************************************************************************
+        /************************
          * Method            : deleteUser()
          * Purpose           : This method deletes the user in actiTime
          * Parameters        : WebDriver oBrowser, String userName
          * Return Type       : boolean
          * Author Name       : Test user
-         *************************************************************************/
-        public static boolean deleteUser(WebDriver oBrowser, String userName) {
-            try {
-                oBrowser.findElement(By.xpath("//div[@class='name']/span[text()='" + userName + "']")).click();
+         *************************/
+        public static boolean deleteUser(WebDriver oBrowser, String userName){
+            try{
+                oBrowser.findElement(By.xpath("//div[@class='name']/span[text()='"+userName+"']")).click();
                 Thread.sleep(2000);
                 oBrowser.findElement(By.xpath("//button[contains(text(), 'Delete User')]")).click();
                 Thread.sleep(2000);
@@ -167,82 +167,82 @@ public class ReusableMethods {
 
 
                 //VErify user is deleted
-                if (oBrowser.findElements(By.xpath("//div[@class='name']/span[text()='" + userName + "']")).size() > 0) {
+                if(oBrowser.findElements(By.xpath("//div[@class='name']/span[text()='"+userName+"']")).size() > 0){
                     System.out.println("Failed to delete the user");
                     return false;
-                } else {
+                }else{
                     System.out.println("User is deleted successful");
                     return true;
                 }
-            } catch (Exception e) {
-                System.out.println("Exception in the 'deleteUser()' method. " + e);
+            }catch(Exception e){
+                System.out.println("Exception in the 'deleteUser()' method. "+ e);
                 return false;
             }
         }
 
-        /************************************************************************
+
+        /************************
          * Method            : logoutFromActiTime()
          * Purpose           : This method logsout from the actiTime
          * Parameters        : WebDriver oBrowser
          * Return Type       : boolean
          * Author Name       : Test user
-         *************************************************************************/
-        public static boolean logoutFromActiTime(WebDriver oBrowser) {
-            try {
+         *************************/
+        public static boolean logoutFromActiTime(WebDriver oBrowser){
+            try{
                 oBrowser.findElement(By.xpath("//a[@id='logoutLink']")).click();
                 Thread.sleep(2000);
 
                 //VErify logout is successful
-                if (oBrowser.findElement(By.id("headerContainer")).getText().equals("Please identify yourself")) {
+                if(oBrowser.findElement(By.id("headerContainer")).getText().equals("Please identify yourself")){
                     System.out.println("Logout from the actiTime is successful");
                     return true;
-                } else {
+                }else{
                     System.out.println("Failed to logout form the actiTime");
                     return false;
                 }
-            } catch (Exception e) {
-                System.out.println("Exception in the 'logoutFromActiTime()' method. " + e);
+            }catch(Exception e){
+                System.out.println("Exception in the 'logoutFromActiTime()' method. "+ e);
                 return false;
             }
         }
-/************************************************************************
- * Method            : getPropData()
- * Purpose           : This method reads the testdata from the Prop file in the for of Map<String, String>
- * Parameters        : String propFileName
- * Return Type       : Map<String, String>
- * Author Name       :
- *************************************************************************/
-            public static Map<String, String> getPropData(String propFileName){
-                FileInputStream fin = null;
-                Properties prop = null;
-                Map<String, String> objMap = null;
-                try{
-                    objMap = new HashMap<String, String>();
-                    fin = new FileInputStream(System.getProperty("user.dir")+"\\testData\\"+propFileName+".properties");
-                    prop = new Properties();
-                    prop.load(fin);
 
-                    Set<Map.Entry<Object, Object>> oData = prop.entrySet();
-                    Iterator<Map.Entry<Object, Object>> it = oData.iterator();
-                    while(it.hasNext()){
-                        Map.Entry<Object, Object> mp = it.next();
-                        objMap.put(mp.getKey().toString(), mp.getValue().toString());
-                    }
-                    return objMap;
-                }catch(Exception e){
-                    System.out.println("Exception in the 'getPropData()' method. "+ e);
-                    return null;
-                }finally
-                {
-                    try{
-                        fin.close();
-                        fin = null;
-                        prop = null;
-                    }catch(Exception e){}
+
+        /************************
+         * Method            : getPropData()
+         * Purpose           : This method reads the testdata from the Prop file in the for of Map<String, String>
+         * Parameters        : String propFileName
+         * Return Type       : Map<String, String>
+         * Author Name       :
+         *************************/
+        public static Map<String, String> getPropData(String propFileName){
+            FileInputStream fin = null;
+            Properties prop = null;
+            Map<String, String> objMap = null;
+            try{
+                objMap = new HashMap<String, String>();
+                fin = new FileInputStream(System.getProperty("user.dir")+"\\testData\\"+propFileName+".properties");
+                prop = new Properties();
+                prop.load(fin);
+
+                Set<Map.Entry<Object, Object>> oData = prop.entrySet();
+                Iterator<Map.Entry<Object, Object>> it = oData.iterator();
+                while(it.hasNext()){
+                    Map.Entry<Object, Object> mp = it.next();
+                    objMap.put(mp.getKey().toString(), mp.getValue().toString());
                 }
+                return objMap;
+            }catch(Exception e){
+                System.out.println("Exception in the 'getPropData()' method. "+ e);
+                return null;
+            }finally
+            {
+                try{
+                    fin.close();
+                    fin = null;
+                    prop = null;
+                }catch(Exception e){}
             }
         }
-
-
-
+}
 
