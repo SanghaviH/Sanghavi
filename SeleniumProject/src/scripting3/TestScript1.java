@@ -1,4 +1,4 @@
-package scripting3_propFile;
+package scripting3;
 
 import org.openqa.selenium.WebDriver;
 import java.util.Map;
@@ -17,18 +17,16 @@ import java.util.Map;
                 data = getPropData("TestData");
                 oBrowser = launchBrowser(data.get("browserName"));
                 boolean blnRes = navigateURL(oBrowser, data.get("url"));
-                blnRes = loginToApplication(oBrowser, data.get("userName"),data.get("password"));
+                blnRes = loginToApplication(oBrowser, data.get("userName") , data.get("password"));
                 blnRes = logoutFromActiTime(oBrowser);
+
             } catch (Exception e) {
                 System.out.println("Exception in 'TS_LoginLogout' test script");
-
             } finally {
                 oBrowser.close();
                 oBrowser = null;
             }
         }
-
-
         public static void TS_createAndDeleteUser() {
             WebDriver oBrowser = null;
             Map<String, String> data = null;
@@ -49,6 +47,4 @@ import java.util.Map;
             }
         }
     }
-
-
 
