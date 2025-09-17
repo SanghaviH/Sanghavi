@@ -1,4 +1,4 @@
-package scripting3_excelFile;
+package scripting4;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -11,22 +11,20 @@ import java.io.FileInputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.poi.ss.usermodel.*;
 
-public class ResusableMethods {
-    /************************
+public class ReusableMethod {
+    /************************************************************************
      * Method            : launchBrowser()
      * Purpose           : This method launches the required browsers viz., chrome, firefox and edge
      * Parameters        : String browserName
      * Return Type       : WebDriver
-     * Author Name      : Test user1
-     * Reviewed By      :
-     * Reviewed Date    :
-     * Modified by      :
-     *************************/
-    public static WebDriver launchBrowser(String browserName) {
+     * Author Name       : Test user1
+     *************************************************************************/
+    public static WebDriver launchBrowser(String browserName){
         WebDriver oDriver = null;
-        try {
-            switch (browserName.toLowerCase()) {
+        try{
+            switch(browserName.toLowerCase()){
                 case "chrome":
                     oDriver = new ChromeDriver();
                     break;
@@ -37,88 +35,88 @@ public class ResusableMethods {
                     oDriver = new EdgeDriver();
                     break;
                 default:
-                    System.out.println("Invalid browser name '" + browserName + "' was mentioned. Please provide the valid browser name");
+                    System.out.println("Invalid browser name '"+browserName+"' was mentioned. Please provide the valid browser name");
                     return null;
             }
 
-            if (oDriver != null) {
+            if(oDriver!=null){
                 oDriver.manage().window().maximize();
-                System.out.println("The '" + browserName + "' browser was launched successful");
+                System.out.println("The '"+browserName+"' browser was launched successfully");
                 return oDriver;
-            } else {
-                System.out.println("Failed to launch the '" + browserName + "' browser");
+            }else{
+                System.out.println("Failed to launch the '"+browserName+"' browser");
                 return null;
             }
-        } catch (Exception e) {
-            System.out.println("Exception in the 'launchBrowser()' method. " + e);
+        }catch(Exception e){
+            System.out.println("Exception in the 'launchBrowser()' method. "+ e);
             return null;
         }
-
     }
 
-    /************************
+    /************************************************************************
      * Method            : navigateURL()
      * Purpose           : This method loads the url
      * Parameters        : WebDriver oBrowser, String strURL
      * Return Type       : boolean
-     * Author Name      : Test user
-     *************************/
-    public static boolean navigateURL(WebDriver oBrowser, String strURL) {
-        try {
-            oBrowser.navigate().to("http://localhost/login.do");
+     * Author Name       : Test user
+     *************************************************************************/
+    public static boolean navigateURL(WebDriver oBrowser, String strURL){
+        try{
+            oBrowser.navigate().to(strURL);
             Thread.sleep(2000);
-            if (oBrowser.getTitle().equalsIgnoreCase("actiTIME - Login")) {
-                System.out.println("The url '" + strURL + "' is loaded successful");
+            if(oBrowser.getTitle().equalsIgnoreCase("actiTIME - Login")){
+                System.out.println("The url '"+strURL+"' is loaded successfully");
                 return true;
-            } else {
-                System.out.println("Failed to load the URL '" + strURL + "'");
+            }else{
+                System.out.println("Failed to load the URL '"+strURL+"'");
                 return false;
             }
-        } catch (Exception e) {
-            System.out.println("Exception in the 'navigateURL()' method. " + e);
+        }catch(Exception e){
+            System.out.println("Exception in the 'navigateURL()' method. "+ e);
             return false;
         }
     }
 
-    /************************
+    /************************************************************************
      * Method            : loginToApplication()
      * Purpose           : This method performs login action in actiTime application
      * Parameters        : WebDriver oBrowser, String userName, String password
      * Return Type       : boolean
-     * Author Name      : Test user
-     *************************/
-    public static boolean loginToApplication(WebDriver oBrowser, String userName, String password) {
-        try {
+     * Author Name       : Test user
+     *************************************************************************/
+    public static boolean loginToApplication(WebDriver oBrowser, String userName, String password){
+        try{
             //Login to the application
-            oBrowser.findElement(By.xpath("//input[@id='username']")).sendKeys(userName);
-            oBrowser.findElement(By.xpath("//input[@name='pwd']")).sendKeys(password);
-            oBrowser.findElement(By.xpath("//a[@id='loginButton']")).click();
+            oBrowser.findElement(ObjectLocator.obj_UserName_Edit).sendKeys(userName);
+            oBrowser.findElement(ObjectLocator.obj_Password_Edit).sendKeys(password);
+            oBrowser.findElement(ObjectLocator.obj_Login_Button).click();
             Thread.sleep(2000);
 
-            //VErify login is successful
-            if (oBrowser.findElement(By.xpath("//input[@id='SubmitTTButton']")).isDisplayed()) {
+            //Verify login is successful
+            if(oBrowser.findElement(ObjectLocator.obj_SaveChange_Button).isDisplayed()){
                 System.out.println("Login to ActiTime is successful");
-                if (oBrowser.findElements(By.xpath("//div[@style='display: block;']")).size() > 0) {
-                    oBrowser.findElement(By.id("gettingStartedShortcutsMenuCloseId")).click();
+                // Close getting started popup if exists
+                if(oBrowser.findElements(ObjectLocator.obj_ShortCut_Dialog).size() > 0){
+                    oBrowser.findElement(ObjectLocator.getObj_ShortCut_Close_Button).click();
                 }
                 return true;
-            } else {
+            }else{
                 System.out.println("Failed to login to actiTime");
                 return false;
             }
-        } catch (Exception e) {
-            System.out.println("Exception in the 'loginToApplication()' method. " + e);
+        }catch(Exception e){
+            System.out.println("Exception in the 'loginToApplication()' method. "+ e);
             return false;
         }
     }
 
-    /************************
+    /************************************************************************
      * Method            : createUser()
      * Purpose           : This method creates new user in actiTime
      * Parameters        : WebDriver oBrowser
      * Return Type       : String
      * Author Name      : Test user
-     *************************/
+     *************************************************************************/
     public static String createUser(WebDriver oBrowser, Map<String, String> data){
         String userName = null;
         try{
@@ -128,12 +126,12 @@ public class ResusableMethods {
             oBrowser.findElement(By.xpath("//div[text()='Add User']")).click();
             Thread.sleep(2000);
 
-            oBrowser.findElement(By.xpath("//input[@name='firstName']")).sendKeys(data.get("user_FirstName"));
-            oBrowser.findElement(By.xpath("//input[@name='lastName']")).sendKeys(data.get("user_lastName"));
-            oBrowser.findElement(By.xpath("//input[@name='email']")).sendKeys(data.get("user_email"));
-            oBrowser.findElement(By.xpath("//input[@name='username']")).sendKeys(data.get("user_userName"));
-            oBrowser.findElement(By.xpath("//input[@name='password']")).sendKeys(data.get("user_password"));
-            oBrowser.findElement(By.xpath("//input[@name='passwordCopy']")).sendKeys(data.get("user_retypePassword"));
+            oBrowser.findElement(ObjectLocator.obj_User_FirstName_Edit).sendKeys(data.get("user_FirstName"));
+            oBrowser.findElement(ObjectLocator.obj_User_LastName_Edit).sendKeys(data.get("user_lastName"));
+            oBrowser.findElement(ObjectLocator.obj_User_Email_Edit).sendKeys(data.get("user_email"));
+            oBrowser.findElement(ObjectLocator.obj_User_UserName_Edit).sendKeys(data.get("user_userName"));
+            oBrowser.findElement(ObjectLocator.obj_User_Password_Edit).sendKeys(data.get("user_password"));
+            oBrowser.findElement(ObjectLocator.obj_User_retypePassword_Edit).sendKeys(data.get("user_retypePassword"));
 
             oBrowser.findElement(By.xpath("//span[text()='Create User']")).click();
             Thread.sleep(2000);
@@ -153,13 +151,13 @@ public class ResusableMethods {
         }
     }
 
-    /************************
+    /************************************************************************
      * Method            : deleteUser()
      * Purpose           : This method deletes the user in actiTime
      * Parameters        : WebDriver oBrowser, String userName
      * Return Type       : boolean
      * Author Name       : Test user
-     *************************/
+     *************************************************************************/
     public static boolean deleteUser(WebDriver oBrowser, String userName){
         try{
             oBrowser.findElement(By.xpath("//div[@class='name']/span[text()='"+userName+"']")).click();
@@ -185,13 +183,13 @@ public class ResusableMethods {
     }
 
 
-    /************************
+    /************************************************************************
      * Method            : logoutFromActiTime()
      * Purpose           : This method logsout from the actiTime
      * Parameters        : WebDriver oBrowser
      * Return Type       : boolean
      * Author Name       : Test user
-     *************************/
+     *************************************************************************/
     public static boolean logoutFromActiTime(WebDriver oBrowser){
         try{
             oBrowser.findElement(By.xpath("//a[@id='logoutLink']")).click();
@@ -304,5 +302,4 @@ public class ResusableMethods {
             }catch(Exception e){}
         }
     }
-
 }
