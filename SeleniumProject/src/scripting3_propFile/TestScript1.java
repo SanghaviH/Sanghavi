@@ -1,4 +1,4 @@
-package scripting3;
+package scripting3_propFile;
 
 import org.openqa.selenium.WebDriver;
 import java.util.Map;
